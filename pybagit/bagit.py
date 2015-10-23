@@ -84,17 +84,12 @@ class BagIt:
         module_path = os.path.dirname(os.path.abspath(__file__))
         self._path_to_multichecksum = os.path.join(module_path, "multichecksum.py")
 
-        try:
-            if os.path.exists(self._bag):
-                self._open_bag()
-                return
-            else:
-                raise BagDoesNotExistError("Bag does not exist at {0}".format(self._bag))
-        except BagDoesNotExistError:
+        if os.path.exists(self._bag):
+            self._open_bag()
+        else:
             self._create_bag()
-        finally:
-            if validate:
-                self.validate()
+        if validate:
+            self.validate()
 
     def is_valid(self):
         """ Returns True if no validation errors have been reported."""
