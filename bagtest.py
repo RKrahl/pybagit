@@ -4,6 +4,7 @@ from test import bagfetch  # comment this out if no network connection
 from test import bagcompress
 from test import bagupdate
 from test import bagcreate
+from test import bagcreateexisting
 from test import bagversion
 
 
@@ -14,6 +15,7 @@ def suite():
     test_suite.addTest(bagcompress.suite())
     test_suite.addTest(bagupdate.suite())
     test_suite.addTest(bagcreate.suite())
+    test_suite.addTest(bagcreateexisting.suite())
     test_suite.addTest(bagversion.suite())
     return test_suite
 
