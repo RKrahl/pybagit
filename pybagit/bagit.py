@@ -398,20 +398,14 @@ class BagIt:
     def _create_bag(self):
         """ Initializes a new bag directory. """
 
-        current_path = os.getcwd()
+        self.bag_directory = os.path.abspath(self._bag)
         try:
-            if os.path.isabs(self._bag):
-                os.mkdir(self._bag)
-            else:
-                os.mkdir(os.path.join(current_path, self._bag))
+            os.mkdir(self.bag_directory)
         except OSError, e:
             raise BagCouldNotBeCreatedError("Bag Could Not Be Created: {0}".format(e))
-            return
         except Exception, e:
-            raise BagError('Could not create directory {0}').format(os.path.join(current_path, self._bag))
-            return
+            raise BagError('Could not create directory {0}').format(self.bag_directory)
 
-        self.bag_directory = os.path.join(current_path, self._bag)
         self.data_directory = os.path.join(self.bag_directory, 'data')
         os.mkdir(self.data_directory)
 
