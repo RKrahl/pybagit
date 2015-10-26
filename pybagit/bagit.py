@@ -31,6 +31,7 @@ import zipfile
 import tarfile
 import sys
 import os
+import errno
 import shutil
 import codecs
 import string
@@ -404,13 +405,18 @@ class BagIt:
         self.bag_directory = os.path.abspath(self._bag)
         try:
             os.mkdir(self.bag_directory)
-        except OSError, e:
-            raise BagCouldNotBeCreatedError("Bag Could Not Be Created: {0}".format(e))
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise BagCouldNotBeCreatedError("Bag Could Not Be Created: {0}".format(e))
         except Exception, e:
             raise BagError('Could not create directory {0}').format(self.bag_directory)
 
         self.data_directory = os.path.join(self.bag_directory, 'data')
-        os.mkdir(self.data_directory)
+        try:
+            os.mkdir(self.data_directory)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
 
         version_id = u"BagIt-Version: {0}.{1}\n".format(self.bag_major_version,
                                                      self.bag_minor_version)
