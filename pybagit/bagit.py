@@ -45,7 +45,7 @@ from pybagit.exceptions import *
 
 
 class BagIt:
-    def __init__(self, bag, validate=False, extended=True, fetch=False):
+    def __init__(self, bag, validate=False, extended=True, fetch=False, create=False):
         """ Creates a Bag object. If file doesn't exist, it initializes an
             empty directory with empty files; if it does, it reads in the
             existing files.
@@ -55,6 +55,9 @@ class BagIt:
 
             If fetch is True, it fetches the files from fetch.txt and places
             them in the appropriate directory.
+
+            If create is True, a new bag will be created even if the bag
+            directory exists.
         """
 
         self._bag              = bag  # bag as passed in. Could be either directory or file name, and may not exist.
@@ -84,10 +87,10 @@ class BagIt:
         module_path = os.path.dirname(os.path.abspath(__file__))
         self._path_to_multichecksum = os.path.join(module_path, "multichecksum.py")
 
-        if os.path.exists(self._bag):
-            self._open_bag()
-        else:
+        if create or not os.path.exists(self._bag):
             self._create_bag()
+        else:
+            self._open_bag()
         if validate:
             self.validate()
 
